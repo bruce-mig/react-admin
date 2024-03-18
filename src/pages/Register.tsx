@@ -1,26 +1,53 @@
 import React, { Component, SyntheticEvent } from "react";
 import '../Login.css';
+import axios from 'axios';
+import { Navigate, redirect } from "react-router-dom";
 
 class Register extends Component {
     first_name = '';
     last_name = '';
     email = '';
     password = '';
-    password_confirm = '';
+    verify_password = '';
+    state = {
+        redirect: false
+    };
 
-    submit = (e: SyntheticEvent) => {
+    // // Promise
+    // submit = (e: SyntheticEvent) => {
+    //     e.preventDefault();
+
+    //     axios.post('http://localhost:8000/api/register', {
+    //         first_name: this.first_name,
+    //         last_name: this.last_name,
+    //         email: this.email,
+    //         password: this.password,
+    //         verify_password: this.verify_password,
+    //     }).then(res => console.log(res));
+    // }
+
+    // Callback
+    submit = async (e: SyntheticEvent) => {
         e.preventDefault();
 
-        console.log({
+        await axios.post('http://localhost:8000/api/register', {
             first_name: this.first_name,
             last_name: this.last_name,
             email: this.email,
             password: this.password,
-            password_confirm: this.password_confirm,
+            verify_password: this.verify_password,
+        });
+
+        this.setState({
+            redirect: true
         });
     }
 
     render() {
+        if (this.state.redirect) {
+            return <Navigate to={'/login'} />;
+        }
+
         return (
             <main className="form-signin w-100 m-auto">
                 <form onSubmit={this.submit}>
@@ -51,7 +78,7 @@ class Register extends Component {
 
                     <div className="form-floating">
                         <input type="password" className="form-control" id="floatingPassword" placeholder="Password"
-                            required onChange={e => this.password_confirm = e.target.value} />
+                            required onChange={e => this.verify_password = e.target.value} />
                         <label htmlFor="floatingPassword">Password Confirm</label>
                     </div>
 
