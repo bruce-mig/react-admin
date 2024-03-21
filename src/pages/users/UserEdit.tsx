@@ -2,30 +2,38 @@ import React, { SyntheticEvent, useEffect, useState } from 'react';
 import Wrapper from "../../components/Wrapper";
 import axios from "axios";
 import { Role } from "../../models/role";
-import { Navigate } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 
-const UserEdit = () => {
+const UserEdit = (props: any) => {
     const [first_name, setFirstName] = useState('');
     const [last_name, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [role_id, setRoleId] = useState('');
     const [roles, setRoles] = useState([]);
     const [redirect, setRedirect] = useState(false);
+    const { id } = useParams();  // Using useParams to access the URL parameter
 
     useEffect(() => {
         (
             async () => {
-                const { data } = await axios.get('roles');
+                const response = await axios.get('roles');
+                setRoles(response.data);
 
-                setRoles(data);
+                if (id) {
+                    const { data } = await axios.get('users/${id}');
+                    setFirstName(data.first_name);
+                    setLastName(data.last_name);
+                    setEmail(data.email);
+                    setRoleId(data.role.id);
+                }
             }
         )()
-    }, []);
+    }, [id]); // Adding id as a dependency for useEffect
 
     const submit = async (e: SyntheticEvent) => {
         e.preventDefault();
 
-        await axios.post('users', {
+        await axios.put('users/${id}', {
             first_name,
             last_name,
             email,
@@ -44,19 +52,27 @@ const UserEdit = () => {
             <form onSubmit={submit}>
                 <div className="mb-3">
                     <label>First Name</label>
-                    <input className="form-control" onChange={e => setFirstName(e.target.value)} />
+                    <input className="form-control"
+                        defaultValue={first_name}
+                        onChange={e => setFirstName(e.target.value)} />
                 </div>
                 <div className="mb-3">
                     <label>Last Name</label>
-                    <input className="form-control" onChange={e => setLastName(e.target.value)} />
+                    <input className="form-control"
+                        defaultValue={last_name}
+                        onChange={e => setLastName(e.target.value)} />
                 </div>
                 <div className="mb-3">
                     <label>Email</label>
-                    <input className="form-control" onChange={e => setEmail(e.target.value)} />
+                    <input className="form-control"
+                        defaultValue={email}
+                        onChange={e => setEmail(e.target.value)} />
                 </div>
                 <div className="mb-3">
                     <label>Role</label>
-                    <select className="form-control" onChange={e => setRoleId(e.target.value)}>
+                    <select className="form-control"
+                        value={role_id}
+                        onChange={e => setRoleId(e.target.value)}>
                         {roles.map((r: Role) => {
                             return (
                                 <option key={r.id} value={r.id}>{r.name}</option>
