@@ -23,6 +23,12 @@ const Menu = () => {
                                 Users
                             </NavLink>
                         </li>
+                        <li className="nav-item">
+                            <NavLink to={'/roles'} className="nav-link d-flex align-items-center gap-2 active" aria-current="page">
+                                <svg className="bi"><use href="#people" /></svg>
+                                Roles
+                            </NavLink>
+                        </li>
                     </ul>
                 </div>
             </div>
