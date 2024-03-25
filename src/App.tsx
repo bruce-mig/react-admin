@@ -11,6 +11,8 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import UserCreate from './pages/users/UserCreate';
 import UserEdit from './pages/users/UserEdit';
+import Roles from './pages/roles/Roles';
+import RoleCreate from './pages/roles/RoleCreate';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
           <Route path={'/users'} Component={Users} />
           <Route path={'/users/create'} Component={UserCreate} />
           <Route path={'/users/:id/edit'} Component={UserEdit} />
+          <Route path={'/roles'} Component={Roles} />
+          <Route path={'/roles/create'} Component={RoleCreate} />
         </Routes>
 
       </BrowserRouter>
